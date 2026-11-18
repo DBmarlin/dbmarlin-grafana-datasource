@@ -6,7 +6,7 @@ import type { DBmarlinQuery } from '../src/types';
 // Test the real Grafana editor independently of DBmarlin's licence, catalogue
 // and collected data. These responses are editor fixtures, not backend tests.
 const test = base.extend({
-  panelEditPage: async ({ dashboardPage, readProvisionedDataSource, page }, use) => {
+  panelEditPage: async ({ dashboardPage, readProvisionedDataSource }, use) => {
     await dashboardPage.mockResourceResponse('instances', [
       { label: 'test-postgres', value: '3' },
       { label: 'test-mysql', value: '4' },
@@ -20,11 +20,8 @@ const test = base.extend({
     await dashboardPage.mockQueryDataResponse({ results: { A: { status: 200, frames: [] } } });
     const panelEditPage = await dashboardPage.addPanel();
     const ds = await readProvisionedDataSource({ fileName: 'datasources.yml' });
-    const picker = page.getByRole('combobox', { name: 'Select a data source', exact: true });
-    await picker.fill(ds.name);
-    await picker.press('ArrowDown');
-    await picker.press('ArrowUp');
-    await picker.press('Enter');
+    // The picker's markup differs between Grafana versions; this helper copes.
+    await panelEditPage.datasource.set(ds.name);
     await panelEditPage.setVisualization('Time series');
     await use(panelEditPage);
   },
@@ -32,7 +29,13 @@ const test = base.extend({
 
 async function select(page: Page, id: string, label: string) {
   await page.locator(`#query-editor-${id}`).click();
-  await page.getByRole('option', { name: label, exact: true }).click();
+  // Newer Grafana marks menu items as options; 11.0 does not, so fall back to
+  // the text. The menu is rendered last in the page, hence last().
+  await page
+    .getByRole('option', { name: label, exact: true })
+    .or(page.getByText(label, { exact: true }))
+    .last()
+    .click();
 }
 
 // An earlier automatic request must not satisfy an assertion about a change.
