@@ -1,0 +1,19 @@
+services:
+  grafana:
+    extends:
+      file: .config/docker-compose-base.yaml
+      service: grafana
+    # Lets the container reach a DBmarlin server running on the host.
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    environment:
+      DBMARLIN_URL: ${DBMARLIN_URL:-http://host.docker.internal:9090}
+      DBMARLIN_UI_URL: ${DBMARLIN_UI_URL:-http://localhost:9090}
+      DBMARLIN_USER: ${DBMARLIN_USER:-}
+      DBMARLIN_PASSWORD: ${DBMARLIN_PASSWORD:-}
+    # Keep dashboards and settings when ./dev up recreates the container.
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+volumes:
+  grafana-data:

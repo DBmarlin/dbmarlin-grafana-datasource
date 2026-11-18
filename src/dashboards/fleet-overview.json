@@ -1,0 +1,436 @@
+{
+  "uid": "dbmarlin-fleet-overview",
+  "title": "DBmarlin - Fleet overview",
+  "description": "Database time across several DBmarlin instances at once (up to 20): who is busiest, and on what.",
+  "tags": [
+    "dbmarlin",
+    "fleet"
+  ],
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": true,
+  "graphTooltip": 1,
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "refresh": "1m",
+  "templating": {
+    "list": [
+      {
+        "type": "datasource",
+        "name": "ds",
+        "label": "Data source",
+        "query": "dbmarlin-dbmarlin-datasource",
+        "refresh": 1,
+        "hide": 0,
+        "current": {},
+        "options": []
+      },
+      {
+        "type": "query",
+        "name": "instance",
+        "label": "Instance",
+        "datasource": {
+          "type": "dbmarlin-dbmarlin-datasource",
+          "uid": "${ds}"
+        },
+        "query": {
+          "refId": "instances",
+          "kind": "instances"
+        },
+        "refresh": 1,
+        "sort": 1,
+        "hide": 0,
+        "multi": true,
+        "includeAll": true,
+        "current": {},
+        "options": [],
+        "allValue": null
+      },
+      {
+        "type": "custom",
+        "name": "metric",
+        "label": "Show",
+        "query": "Average active sessions : aas, Wait time : waittime",
+        "hide": 0,
+        "multi": false,
+        "includeAll": false,
+        "current": {
+          "text": "Average active sessions",
+          "value": "aas"
+        },
+        "options": [
+          {
+            "text": "Average active sessions",
+            "value": "aas",
+            "selected": true
+          },
+          {
+            "text": "Wait time",
+            "value": "waittime",
+            "selected": false
+          }
+        ]
+      }
+    ]
+  },
+  "annotations": {
+    "list": [
+      {
+        "name": "DBmarlin alerts",
+        "datasource": {
+          "type": "dbmarlin-dbmarlin-datasource",
+          "uid": "${ds}"
+        },
+        "enable": true,
+        "iconColor": "#ff853d",
+        "target": {
+          "refId": "Anno",
+          "queryType": "events",
+          "instances": [
+            "$instance"
+          ],
+          "eventKinds": [
+            "alert"
+          ]
+        }
+      },
+      {
+        "name": "DBmarlin changes",
+        "datasource": {
+          "type": "dbmarlin-dbmarlin-datasource",
+          "uid": "${ds}"
+        },
+        "enable": true,
+        "iconColor": "#0090bd",
+        "target": {
+          "refId": "Anno",
+          "queryType": "events",
+          "instances": [
+            "$instance"
+          ],
+          "eventKinds": [
+            "change"
+          ]
+        }
+      },
+      {
+        "name": "DBmarlin events",
+        "datasource": {
+          "type": "dbmarlin-dbmarlin-datasource",
+          "uid": "${ds}"
+        },
+        "enable": true,
+        "iconColor": "#c29ffa",
+        "target": {
+          "refId": "Anno",
+          "queryType": "events",
+          "instances": [
+            "$instance"
+          ],
+          "eventKinds": [
+            "custom"
+          ]
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "${metric:text} per instance",
+      "description": "One series per selected instance, as average active sessions or wait time (choose with Show).",
+      "datasource": {
+        "type": "dbmarlin-dbmarlin-datasource",
+        "uid": "${ds}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 16,
+        "h": 9
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "lineWidth": 2,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "spanNulls": true,
+            "lineInterpolation": "smooth",
+            "showPoints": "never"
+          },
+          "links": [
+            {
+              "title": "Open instance overview",
+              "targetBlank": false,
+              "url": "/d/dbmarlin-instance-overview/dbmarlin-instance-overview?${ds:queryparam}&var-instance=${__field.labels.instance_id}&${__url_time_range}"
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "sortBy": "Mean",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "dbmarlin-dbmarlin-datasource",
+            "uid": "${ds}"
+          },
+          "instances": [
+            "$instance"
+          ],
+          "queryType": "activity_timeseries",
+          "groupBy": "none",
+          "metric": "$metric"
+        }
+      ],
+      "maxDataPoints": 120
+    },
+    {
+      "id": 2,
+      "type": "bargauge",
+      "title": "Busiest instances (${metric:text})",
+      "description": "Over the time range, per instance: the average for average active sessions, the total for wait time.",
+      "datasource": {
+        "type": "dbmarlin-dbmarlin-datasource",
+        "uid": "${ds}"
+      },
+      "gridPos": {
+        "x": 16,
+        "y": 0,
+        "w": 8,
+        "h": 9
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "color": {
+            "mode": "continuous-BlYlRd"
+          },
+          "links": [
+            {
+              "title": "Open instance overview",
+              "targetBlank": false,
+              "url": "/d/dbmarlin-instance-overview/dbmarlin-instance-overview?${ds:queryparam}&var-instance=${__field.labels.instance_id}&${__url_time_range}"
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "dbmarlin-dbmarlin-datasource",
+            "uid": "${ds}"
+          },
+          "instances": [
+            "$instance"
+          ],
+          "queryType": "activity_summary",
+          "metric": "$metric"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "table",
+      "title": "Top wait events",
+      "description": "Across the selected instances, biggest first.",
+      "datasource": {
+        "type": "dbmarlin-dbmarlin-datasource",
+        "uid": "${ds}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 9,
+        "w": 12,
+        "h": 10
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "cellOptions": {
+              "type": "auto"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(link|instance_id)$"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Instance"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open instance overview",
+                    "targetBlank": false,
+                    "url": "/d/dbmarlin-instance-overview/dbmarlin-instance-overview?${ds:queryparam}&var-instance=${__data.fields.instance_id}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "dbmarlin-dbmarlin-datasource",
+            "uid": "${ds}"
+          },
+          "instances": [
+            "$instance"
+          ],
+          "queryType": "activity_table",
+          "groupBy": "waitevent",
+          "topN": 15
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "table",
+      "title": "Top SQL",
+      "description": "Across the selected instances, biggest first. Click a SQL value to open it in DBmarlin.",
+      "datasource": {
+        "type": "dbmarlin-dbmarlin-datasource",
+        "uid": "${ds}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 9,
+        "w": 12,
+        "h": 10
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "cellOptions": {
+              "type": "auto"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(link|instance_id)$"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Instance"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Open instance overview",
+                    "targetBlank": false,
+                    "url": "/d/dbmarlin-instance-overview/dbmarlin-instance-overview?${ds:queryparam}&var-instance=${__data.fields.instance_id}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "dbmarlin-dbmarlin-datasource",
+            "uid": "${ds}"
+          },
+          "instances": [
+            "$instance"
+          ],
+          "queryType": "activity_table",
+          "groupBy": "sqlhash",
+          "topN": 15
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "type": "link",
+      "title": "Instance overview",
+      "icon": "dashboard",
+      "url": "/d/dbmarlin-instance-overview/dbmarlin-instance-overview",
+      "keepTime": true,
+      "includeVars": false,
+      "targetBlank": false
+    }
+  ]
+}

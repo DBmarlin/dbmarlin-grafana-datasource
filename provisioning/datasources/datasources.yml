@@ -1,0 +1,17 @@
+apiVersion: 1
+
+# Points at the DBmarlin backend that ./dev passes in as DBMARLIN_URL.
+datasources:
+  - name: 'DBmarlin'
+    type: 'dbmarlin-dbmarlin-datasource'
+    access: proxy
+    isDefault: true
+    orgId: 1
+    editable: true
+    jsonData:
+      url: '${DBMARLIN_URL}'
+      # Links open in the browser, which cannot resolve host.docker.internal.
+      uiUrl: '${DBMARLIN_UI_URL}'
+      username: '${DBMARLIN_USER}'
+    secureJsonData:
+      password: '${DBMARLIN_PASSWORD}'

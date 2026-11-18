@@ -1,0 +1,37 @@
+# Builds the plugin when a version tag is pushed, and creates a draft GitHub
+# release with the zip. See https://github.com/grafana/plugin-actions/blob/main/build-plugin/README.md
+#
+# Releases come from scripts/publish-grafana-plugin.sh in the DBmarlin monorepo,
+# which pushes the v<version> tag.
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*' # e.g. v1.0.0
+
+permissions: read-all
+
+jobs:
+  release:
+    permissions:
+      contents: write # create the release
+      id-token: write # provenance attestation
+      attestations: write # provenance attestation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: grafana/plugin-actions/build-plugin@build-plugin/v1.2.0
+        with:
+          # Build provenance, so reviewers can see the zip came from this repo.
+          # Only available in public repositories.
+          attestation: true
+          # Enable signing only after Grafana has approved the plugin and granted
+          # a signature level: save an access policy token with the plugins:write
+          # scope as the repository secret GRAFANA_ACCESS_POLICY_TOKEN, then
+          # uncomment the next line.
+          # (https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin#generate-an-access-policy-token)
+          # policy_token: ${{ secrets.GRAFANA_ACCESS_POLICY_TOKEN }}

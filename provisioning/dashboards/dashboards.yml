@@ -1,0 +1,13 @@
+apiVersion: 1
+
+# Loads the dashboards bundled with the plugin, so a dev Grafana has them
+# without importing them from the data source's Dashboards tab.
+providers:
+  - name: 'DBmarlin'
+    orgId: 1
+    folder: 'DBmarlin'
+    type: file
+    disableDeletion: false
+    allowUiUpdates: false
+    options:
+      path: /var/lib/grafana/plugins/dbmarlin-dbmarlin-datasource/dashboards

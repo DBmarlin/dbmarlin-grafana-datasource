@@ -1,0 +1,456 @@
+{
+  "uid": "dbmarlin-instance-overview",
+  "title": "DBmarlin - Instance overview",
+  "description": "Database time for one DBmarlin instance: wait events, SQL, host load and DBmarlin events (alerts, changes, deployments). Series colours follow the DBmarlin UI.",
+  "tags": [
+    "dbmarlin",
+    "instance"
+  ],
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": true,
+  "graphTooltip": 1,
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "refresh": "1m",
+  "templating": {
+    "list": [
+      {
+        "type": "datasource",
+        "name": "ds",
+        "label": "Data source",
+        "query": "dbmarlin-dbmarlin-datasource",
+        "refresh": 1,
+        "hide": 0,
+        "current": {},
+        "options": []
+      },
+      {
+        "type": "query",
+        "name": "instance",
+        "label": "Instance",
+        "datasource": {
+          "type": "dbmarlin-dbmarlin-datasource",
+          "uid": "${ds}"
+        },
+        "query": {
+          "refId": "instances",
+          "kind": "instances"
+        },
+        "refresh": 1,
+        "sort": 1,
+        "hide": 0,
+        "multi": false,
+        "includeAll": false,
+        "current": {},
+        "options": []
+      },
+      {
+        "type": "custom",
+        "name": "metric",
+        "label": "Show",
+        "query": "Average active sessions : aas, Wait time : waittime",
+        "hide": 0,
+        "multi": false,
+        "includeAll": false,
+        "current": {
+          "text": "Average active sessions",
+          "value": "aas"
+        },
+        "options": [
+          {
+            "text": "Average active sessions",
+            "value": "aas",
+            "selected": true
+          },
+          {
+            "text": "Wait time",
+            "value": "waittime",
+            "selected": false
+          }
+        ]
+      }
+    ]
+  },
+  "annotations": {
+    "list": [
+      {
+        "name": "DBmarlin alerts",
+        "datasource": {
+          "type": "dbmarlin-dbmarlin-datasource",
+          "uid": "${ds}"
+        },
+        "enable": true,
+        "iconColor": "#ff853d",
+        "target": {
+          "refId": "Anno",
+          "queryType": "events",
+          "instances": [
+            "$instance"
+          ],
+          "eventKinds": [
+            "alert"
+          ]
+        }
+      },
+      {
+        "name": "DBmarlin changes",
+        "datasource": {
+          "type": "dbmarlin-dbmarlin-datasource",
+          "uid": "${ds}"
+        },
+        "enable": true,
+        "iconColor": "#0090bd",
+        "target": {
+          "refId": "Anno",
+          "queryType": "events",
+          "instances": [
+            "$instance"
+          ],
+          "eventKinds": [
+            "change"
+          ]
+        }
+      },
+      {
+        "name": "DBmarlin events",
+        "datasource": {
+          "type": "dbmarlin-dbmarlin-datasource",
+          "uid": "${ds}"
+        },
+        "enable": true,
+        "iconColor": "#c29ffa",
+        "target": {
+          "refId": "Anno",
+          "queryType": "events",
+          "instances": [
+            "$instance"
+          ],
+          "eventKinds": [
+            "custom"
+          ]
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "${metric:text} by wait event",
+      "description": "Database activity by wait event, as average active sessions or wait time (choose with Show). The top 10 are shown and the rest are combined as Other.",
+      "datasource": {
+        "type": "dbmarlin-dbmarlin-datasource",
+        "uid": "${ds}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 9
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "lineWidth": 0,
+            "stacking": {
+              "mode": "normal"
+            },
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "sortBy": "Mean",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "dbmarlin-dbmarlin-datasource",
+            "uid": "${ds}"
+          },
+          "queryType": "activity_timeseries",
+          "instances": [
+            "$instance"
+          ],
+          "groupBy": "waitevent",
+          "metric": "$metric",
+          "topN": 10,
+          "includeOther": true
+        }
+      ],
+      "maxDataPoints": 120
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "${metric:text} by SQL",
+      "description": "The same, by SQL statement hash. Use the table below for the SQL text.",
+      "datasource": {
+        "type": "dbmarlin-dbmarlin-datasource",
+        "uid": "${ds}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 9,
+        "w": 24,
+        "h": 9
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "lineWidth": 0,
+            "stacking": {
+              "mode": "normal"
+            },
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "sortBy": "Mean",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "dbmarlin-dbmarlin-datasource",
+            "uid": "${ds}"
+          },
+          "queryType": "activity_timeseries",
+          "instances": [
+            "$instance"
+          ],
+          "groupBy": "sqlhash",
+          "metric": "$metric",
+          "topN": 10,
+          "includeOther": true
+        }
+      ],
+      "maxDataPoints": 120
+    },
+    {
+      "id": 3,
+      "type": "table",
+      "title": "Top SQL",
+      "description": "Click a SQL value to open the statement in DBmarlin.",
+      "datasource": {
+        "type": "dbmarlin-dbmarlin-datasource",
+        "uid": "${ds}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 18,
+        "w": 14,
+        "h": 9
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "cellOptions": {
+              "type": "auto"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(link|instance_id)$"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "dbmarlin-dbmarlin-datasource",
+            "uid": "${ds}"
+          },
+          "queryType": "activity_table",
+          "instances": [
+            "$instance"
+          ],
+          "groupBy": "sqlhash",
+          "topN": 10
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "table",
+      "title": "Top wait events",
+      "description": "Click a wait event to open it in DBmarlin.",
+      "datasource": {
+        "type": "dbmarlin-dbmarlin-datasource",
+        "uid": "${ds}"
+      },
+      "gridPos": {
+        "x": 14,
+        "y": 18,
+        "w": 10,
+        "h": 9
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "cellOptions": {
+              "type": "auto"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "^(link|instance_id)$"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "dbmarlin-dbmarlin-datasource",
+            "uid": "${ds}"
+          },
+          "queryType": "activity_table",
+          "instances": [
+            "$instance"
+          ],
+          "groupBy": "waitevent",
+          "topN": 10
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Host CPU and memory",
+      "description": "Needs DBmarlin host monitoring for the instance's host.",
+      "datasource": {
+        "type": "dbmarlin-dbmarlin-datasource",
+        "uid": "${ds}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 27,
+        "w": 24,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineWidth": 1
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "dbmarlin-dbmarlin-datasource",
+            "uid": "${ds}"
+          },
+          "queryType": "host_statistic",
+          "instances": [
+            "$instance"
+          ],
+          "hostMetrics": [
+            "cpuutilisation",
+            "memoryutilisation"
+          ]
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "type": "link",
+      "title": "Fleet overview",
+      "icon": "dashboard",
+      "url": "/d/dbmarlin-fleet-overview/dbmarlin-fleet-overview",
+      "keepTime": true,
+      "includeVars": false,
+      "targetBlank": false
+    }
+  ]
+}
