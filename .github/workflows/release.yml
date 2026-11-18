@@ -1,7 +1,7 @@
 # Builds the plugin when a version tag is pushed, and creates a draft GitHub
 # release with the zip. See https://github.com/grafana/plugin-actions/blob/main/build-plugin/README.md
 #
-# Releases come from scripts/publish-grafana-plugin.sh in the DBmarlin monorepo,
+# Releases come from packaging/grafana/publish-grafana-plugin.sh in the DBmarlin monorepo,
 # which pushes the v<version> tag.
 name: Release
 
@@ -9,6 +9,9 @@ on:
   push:
     tags:
       - 'v*' # e.g. v1.0.0
+  # Lets you run it by hand from the Actions tab, choosing the tag as the ref,
+  # if a tag push did not start it.
+  workflow_dispatch:
 
 permissions: read-all
 

@@ -116,7 +116,7 @@ func (c *Client) GetWithHeader(ctx context.Context, path string, query url.Value
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	// One byte over the limit tells an answer that fits from one that was cut.
 	body, err := io.ReadAll(io.LimitReader(resp.Body, int64(maxAnswer)+1))
 	if err != nil {

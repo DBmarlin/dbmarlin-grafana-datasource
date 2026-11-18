@@ -29,11 +29,11 @@ func TestCheckHealth(t *testing.T) {
 		user, pass, _ := r.BasicAuth()
 		switch {
 		case r.URL.Path != "/archiver/rest/v1/datasource":
-			w.Write([]byte("<html>nginx</html>"))
+			_, _ = w.Write([]byte("<html>nginx</html>"))
 		case user != "grafana" || pass != "secret":
 			w.WriteHeader(http.StatusUnauthorized)
 		default:
-			w.Write([]byte(`[{"id":1},{"id":2}]`))
+			_, _ = w.Write([]byte(`[{"id":1},{"id":2}]`))
 		}
 	}))
 	defer server.Close()
