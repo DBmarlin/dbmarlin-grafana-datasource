@@ -22,10 +22,9 @@ const (
 // from jsonData; the secrets are decrypted by Grafana and never reach the
 // browser.
 type PluginSettings struct {
-	URL           string `json:"url"`
-	Username      string `json:"username"`
-	UIURL         string `json:"uiUrl"`
-	TLSSkipVerify bool   `json:"tlsSkipVerify"`
+	URL      string `json:"url"`
+	Username string `json:"username"`
+	UIURL    string `json:"uiUrl"`
 	// TimeoutSeconds is per archiver request.
 	TimeoutSeconds int `json:"timeout"`
 	// MaxConcurrent limits archiver requests in flight for this data source.

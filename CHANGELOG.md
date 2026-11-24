@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.2 (2026-11-24)
+
+### Changes
+
+- Removed the **Skip TLS verify** setting, so the plugin always verifies the DBmarlin server's certificate and uses TLS 1.2 or later. For a self-signed or private-CA certificate, paste the CA certificate, or the self-signed certificate itself, into **TLS CA certificate**. Data sources that had **Skip TLS verify** turned on need this before they connect again.
+
+### Requirements
+
+- Grafana 11.0 or later.
+- DBmarlin 6.12 or later.
+
 ## 1.0.1 (2026-11-24)
 
 ### Changes

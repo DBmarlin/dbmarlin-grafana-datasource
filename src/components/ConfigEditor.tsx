@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { InlineField, InlineSwitch, Input, SecretInput, SecretTextArea, Select } from '@grafana/ui';
+import { InlineField, Input, SecretInput, SecretTextArea, Select } from '@grafana/ui';
 import { DataSourcePluginOptionsEditorProps, SelectableValue } from '@grafana/data';
 import { MyDataSourceOptions, MySecureJsonData, SqlTextMode } from '../types';
 
@@ -68,17 +68,10 @@ export function ConfigEditor(props: Props) {
           onChange={onSecret('password')}
         />
       </InlineField>
-      <InlineField label="Skip TLS verify" labelWidth={20} tooltip="For self-signed DBmarlin certificates.">
-        <InlineSwitch
-          id="config-editor-tls-skip-verify"
-          value={Boolean(jsonData.tlsSkipVerify)}
-          onChange={(event) => setJsonData({ tlsSkipVerify: event.currentTarget.checked })}
-        />
-      </InlineField>
       <InlineField
         label="TLS CA certificate"
         labelWidth={20}
-        tooltip="PEM certificate that signed the DBmarlin certificate."
+        tooltip="PEM certificate that signed the DBmarlin certificate, or the certificate itself if it is self-signed."
       >
         <SecretTextArea
           id="config-editor-tls-ca-cert"

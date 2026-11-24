@@ -52,7 +52,6 @@ export interface MyDataSourceOptions extends DataSourceJsonData {
   url?: string;
   username?: string;
   uiUrl?: string;
-  tlsSkipVerify?: boolean;
   /** Seconds, per archiver request. */
   timeout?: number;
   maxConcurrent?: number;

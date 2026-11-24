@@ -37,7 +37,7 @@ Other settings, all optional:
 
 | Setting | Use |
 | --- | --- |
-| Skip TLS verify, TLS CA certificate | For DBmarlin servers with a self-signed or private-CA certificate. |
+| TLS CA certificate | For DBmarlin servers with a self-signed or private-CA certificate: paste the CA certificate, or the self-signed certificate itself, in PEM format. |
 | UI URL | The address your browser uses for DBmarlin, if it differs from the URL above. Links back into DBmarlin use it. |
 | Timeout, Max concurrent requests | Limits per request, and across all panels, to protect DBmarlin. |
 | SQL text | Show full SQL, truncated SQL, or none, for sites that must not expose statements. |

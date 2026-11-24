@@ -55,7 +55,7 @@ type Client struct {
 }
 
 func NewClient(settings *models.PluginSettings) (*Client, error) {
-	tlsConfig := &tls.Config{InsecureSkipVerify: settings.TLSSkipVerify} //nolint:gosec // opt-in for self-signed DBmarlin certificates
+	tlsConfig := &tls.Config{MinVersion: tls.VersionTLS12}
 	if ca := settings.Secrets.CACert; ca != "" {
 		pool := x509.NewCertPool()
 		if !pool.AppendCertsFromPEM([]byte(ca)) {
