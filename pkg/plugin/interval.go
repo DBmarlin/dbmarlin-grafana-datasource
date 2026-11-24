@@ -29,7 +29,7 @@ func snapInterval(d time.Duration) time.Duration {
 }
 
 // reportedInterval reads the bucket size the archiver says it used, or 0 when
-// the header is missing (DBmarlin older than 6.11) or not a positive number.
+// the header is missing (DBmarlin older than 6.12) or not a positive number.
 func reportedInterval(h http.Header) time.Duration {
 	ms, err := strconv.ParseInt(h.Get(intervalHeader), 10, 64)
 	if err != nil || ms <= 0 {

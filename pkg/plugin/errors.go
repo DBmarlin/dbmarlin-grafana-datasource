@@ -26,7 +26,7 @@ func (d *Datasource) errorResponse(err error, grouped bool) backend.DataResponse
 				int(d.settings.Timeout().Seconds())))
 	case errors.As(err, &se) && se.Status == http.StatusNotFound && grouped:
 		return backend.ErrDataResponseWithSource(backend.StatusNotFound, backend.ErrorSourceDownstream,
-			"grouping needs DBmarlin 6.11 or later")
+			"grouping needs DBmarlin 6.12 or later")
 	case errors.As(err, &se):
 		return backend.ErrDataResponseWithSource(backend.Status(se.Status), backend.ErrorSourceDownstream, se.Error())
 	default:

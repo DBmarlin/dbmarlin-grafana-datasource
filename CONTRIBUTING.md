@@ -5,7 +5,7 @@
 - Node.js 22 or later (see `.nvmrc`) and npm
 - Go (the version in `go.mod`) and [Mage](https://magefile.org)
 - Docker, to run a local Grafana
-- A DBmarlin 6.11 or later server to test against
+- A DBmarlin 6.12 or later server to test against
 
 ## Backend
 

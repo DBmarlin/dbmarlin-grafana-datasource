@@ -18,7 +18,7 @@ Every graph and table can link back to the matching statement or activity view i
 ## Requirements
 
 - Grafana 11.0 or later.
-- DBmarlin 6.11 or later, on a server that the **Grafana server** can reach (not just your browser). The plugin has its own version number, independent of the DBmarlin version.
+- DBmarlin 6.12 or later, on a server that the **Grafana server** can reach (not just your browser). The plugin has its own version number, independent of the DBmarlin version.
 - A DBmarlin user for the plugin. Everyone who can query the data source sees what that user sees, so use a dedicated user with the access you want to expose, such as read-only access limited by tags. If DBmarlin has no authentication, leave the username empty.
 - The plugin includes a backend for Linux (x86-64 and ARM64), Windows and macOS (Apple silicon).
 

@@ -157,7 +157,7 @@ func TestErrors(t *testing.T) {
 	f := newFakeArchiver(t)
 	f.status = 404
 	resp := run(t, f, map[string]any{"instances": []string{"3"}, "groupBy": "waitevent"})
-	if resp.Error == nil || resp.Error.Error() != "grouping needs DBmarlin 6.11 or later" {
+	if resp.Error == nil || resp.Error.Error() != "grouping needs DBmarlin 6.12 or later" {
 		t.Errorf("grouped 404: %v", resp.Error)
 	}
 	if resp.ErrorSource != backend.ErrorSourceDownstream {

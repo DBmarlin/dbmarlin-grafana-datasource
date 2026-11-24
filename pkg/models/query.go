@@ -31,7 +31,7 @@ const (
 )
 
 // GroupDimensions are the dimensions of the archiver's activity/time/{dimension}
-// endpoint (DBmarlin 6.11 or later).
+// endpoint (DBmarlin 6.12 or later).
 var GroupDimensions = []string{
 	"waitevent", "sqlhash", "session", "username", "database", "client", "program", "module",
 }

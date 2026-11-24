@@ -75,7 +75,7 @@ func NewClient(settings *models.PluginSettings) (*Client, error) {
 }
 
 // intervalHeader carries the bucket size, in milliseconds, the archiver
-// actually used (DBmarlin 6.11 or later).
+// actually used (DBmarlin 6.12 or later).
 const intervalHeader = "X-DBmarlin-Interval"
 
 // maxAnswer is the largest answer the plugin will read, in bytes. A variable

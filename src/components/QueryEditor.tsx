@@ -126,7 +126,7 @@ export function QueryEditor({ query, onChange, onRunQuery, datasource }: Props) 
           <InlineField
             label={isTable ? 'List' : 'Group by'}
             labelWidth={16}
-            tooltip={isTable ? undefined : 'Needs DBmarlin 6.11 or later'}
+            tooltip={isTable ? undefined : 'Needs DBmarlin 6.12 or later'}
           >
             <Select
               inputId="query-editor-groupby"
